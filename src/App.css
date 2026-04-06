@@ -1,0 +1,165 @@
+/* Styling directly applied */
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: #0A0A0A;
+  color: #FFFFFF;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  height: 100%;
+  box-sizing: border-box;
+  touch-action: pan-y; /* PWA smooth scroll constraint */
+}
+
+#root {
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 0;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 0 10px;
+  margin-bottom: 50px;
+}
+
+.dayCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dayText {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.dayCircle {
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  border: 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.check {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mainButton {
+  width: 250px;
+  height: 250px;
+  border-radius: 125px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #000;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mainButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.statusBox {
+  width: 250px;
+  height: 250px;
+  border-radius: 125px;
+  border: 4px solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #050505;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+}
+
+.statusTitle {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+}
+
+.statusTime {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.footer {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.reminderLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.timeInput {
+  border: none;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.timeInput::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
