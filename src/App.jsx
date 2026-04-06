@@ -5,6 +5,10 @@ function App() {
   const [history, setHistory] = useState({});
   const [reminderTime, setReminderTime] = useState('17:00'); // Default to 5 PM
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [pushEnabled, setPushEnabled] = useState(false);
+
+  // Replace with your actual backend URL once deployed (e.g., Render, Vercel, Heroku)
+  const BACKEND_URL = 'https://wise-hoops-cry.loca.lt';
 
   const THEME = {
     accent: '#00FFFF',
@@ -28,6 +32,7 @@ function App() {
 
   useEffect(() => {
     loadData();
+    registerServiceWorker();
 
     // Check every minute if day has changed
     const interval = setInterval(() => {
@@ -39,6 +44,79 @@ function App() {
 
     return () => clearInterval(interval);
   }, [currentDate]);
+
+  const urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/\-/g, '+')
+      .replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
+
+  const registerServiceWorker = async () => {
+    if ('serviceWorker' in navigator && 'PushManager' in window) {
+      try {
+        const registration = await navigator.serviceWorker.register('/daily-scoop/sw.js');
+        console.log('Service Worker Registered');
+        
+        // Check if already subscribed
+        const subscription = await registration.pushManager.getSubscription();
+        if (subscription) {
+          setPushEnabled(true);
+        }
+      } catch (error) {
+        console.error('Service Worker Registration Failed:', error);
+      }
+    }
+  };
+
+  const enablePushNotifications = async () => {
+    if (!('serviceWorker' in navigator && 'PushManager' in window)) {
+        alert("Push notifications are not supported by your browser. (On iPhone, you must Add to Home Screen first)");
+        return;
+    }
+
+    try {
+        const registration = await navigator.serviceWorker.ready;
+        
+        // Fetch the public key from our backend
+        const response = await fetch(`${BACKEND_URL}/vapidPublicKey`, {
+          headers: { 'Bypass-Tunnel-Reminder': 'true' }
+        });
+        const vapidPublicKey = await response.text();
+        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+
+        const subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidKey
+        });
+
+        // Send the subscription to our backend
+        await fetch(`${BACKEND_URL}/subscribe`, {
+          method: 'POST',
+          body: JSON.stringify(subscription),
+          headers: {
+            'content-type': 'application/json',
+            'Bypass-Tunnel-Reminder': 'true'
+          }
+        });
+
+        setPushEnabled(true);
+        alert("Success! You'll receive real push notifications at 5 PM if you forget.");
+    } catch (e) {
+        console.error('Push registration failed', e);
+        if (e.message.includes('permission')) {
+             alert('You need to grant notification permissions.');
+        } else {
+             alert('Failed to enable push. Are you running this as a Home Screen app?');
+        }
+    }
+  };
 
   const loadData = () => {
     const storedHistory = localStorage.getItem('creatine_history');
@@ -68,6 +146,12 @@ function App() {
     };
     setHistory(newHistory);
     localStorage.setItem('creatine_history', JSON.stringify(newHistory));
+
+    // Tell the backend we took it so it cancels the 5 PM push
+    fetch(`${BACKEND_URL}/mark-taken`, { 
+      method: 'POST',
+      headers: { 'Bypass-Tunnel-Reminder': 'true' }
+    }).catch(e => console.error(e));
   };
   
   const generateICS = () => {
@@ -173,9 +257,10 @@ END:VCALENDAR`;
             onChange={(e) => scheduleReminder(e.target.value)}
             className="timeInput"
             style={{ backgroundColor: THEME.surface, color: THEME.text }}
+            disabled // Controlled by backend now
           />
-          <button className="syncButton" onClick={generateICS} style={{ backgroundColor: THEME.surface, color: THEME.text }}>
-             Sync Offline Alarm
+          <button className="syncButton" onClick={enablePushNotifications} style={{ backgroundColor: pushEnabled ? THEME.accent : THEME.surface, color: pushEnabled ? '#000' : THEME.text }}>
+             {pushEnabled ? "Push Enabled ✓" : "Enable Smart Push"}
           </button>
         </div>
       </footer>
