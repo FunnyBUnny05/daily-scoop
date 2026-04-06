@@ -76,25 +76,54 @@ function App() {
   };
 
   const enablePushNotifications = async () => {
-    if (!('serviceWorker' in navigator && 'PushManager' in window)) {
-        alert("Push notifications are not supported by your browser. (On iPhone, you must Add to Home Screen first)");
+    // Check 1: Is this browser capable?
+    if (!('serviceWorker' in navigator)) {
+        alert("Error: Service Workers not supported in this browser.");
+        return;
+    }
+    if (!('PushManager' in window)) {
+        alert("Error: PushManager not available. On iPhone, you MUST open this from a Home Screen icon (not Safari). Go to Safari → Share → Add to Home Screen, then reopen.");
+        return;
+    }
+    if (!('Notification' in window)) {
+        alert("Error: Notification API not available.");
         return;
     }
 
     try {
+        // Step 1: Request notification permission FIRST (iOS requires this)
+        const permission = await Notification.requestPermission();
+        if (permission !== 'granted') {
+          alert(`Notification permission was ${permission}. You need to allow notifications. Go to Settings > Daily Scoop > Notifications and enable them.`);
+          return;
+        }
+
+        // Step 2: Wait for the service worker to be ready
         const registration = await navigator.serviceWorker.ready;
         
-        // Fetch the public key from our backend
+        // Step 3: Fetch the public key from our backend
         const response = await fetch(`${BACKEND_URL}/vapidPublicKey`);
+        if (!response.ok) {
+          alert(`Backend error: ${response.status} ${response.statusText}. Is the server running?`);
+          return;
+        }
         const vapidPublicKey = await response.text();
+        
+        // Sanity check the key
+        if (vapidPublicKey.includes('<') || vapidPublicKey.length < 20) {
+          alert(`Got invalid VAPID key from server (got HTML page instead of key). Backend tunnel may be blocked.`);
+          return;
+        }
+        
         const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
+        // Step 4: Subscribe to push
         const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: convertedVapidKey
         });
 
-        // Send the subscription to our backend
+        // Step 5: Send the subscription to our backend
         await fetch(`${BACKEND_URL}/subscribe`, {
           method: 'POST',
           body: JSON.stringify(subscription),
@@ -107,11 +136,8 @@ function App() {
         alert("Success! You'll receive real push notifications at 5 PM if you forget.");
     } catch (e) {
         console.error('Push registration failed', e);
-        if (e.message.includes('permission')) {
-             alert('You need to grant notification permissions.');
-        } else {
-             alert('Failed to enable push. Are you running this as a Home Screen app?');
-        }
+        // Show the REAL error so we can debug
+        alert(`Push failed: ${e.name}: ${e.message}`);
     }
   };
 
