@@ -163,3 +163,28 @@ body, html {
 .timeInput::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
+
+.timerControlRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.syncButton {
+  border: none;
+  padding: 14px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.syncButton:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+}
