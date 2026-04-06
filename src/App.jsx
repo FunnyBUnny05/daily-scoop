@@ -269,20 +269,10 @@ END:VCALENDAR`;
       </main>
 
       <footer className="footer">
-        <p className="reminderLabel" style={{ color: THEME.textDim }}>Daily Reminder Time</p>
-        <div className="timerControlRow">
-          <input 
-            type="time" 
-            value={reminderTime}
-            onChange={(e) => scheduleReminder(e.target.value)}
-            className="timeInput"
-            style={{ backgroundColor: THEME.surface, color: THEME.text }}
-            disabled // Controlled by backend now
-          />
-          <button className="syncButton" onClick={enablePushNotifications} style={{ backgroundColor: pushEnabled ? THEME.accent : THEME.surface, color: pushEnabled ? '#000' : THEME.text }}>
-             {pushEnabled ? "Push Enabled ✓" : "Enable Smart Push"}
-          </button>
-        </div>
+        <p className="reminderLabel" style={{ color: THEME.textDim }}>Reminds you 24h after your last dose</p>
+        <button className="syncButton" onClick={enablePushNotifications} style={{ backgroundColor: pushEnabled ? THEME.accent : THEME.surface, color: pushEnabled ? '#000' : THEME.text }}>
+           {pushEnabled ? "Push Enabled ✓" : "Enable Smart Push"}
+        </button>
       </footer>
     </div>
   );
