@@ -7,8 +7,8 @@ function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [pushEnabled, setPushEnabled] = useState(false);
 
-  // Replace with your actual backend URL once deployed (e.g., Render, Vercel, Heroku)
-  const BACKEND_URL = 'https://c1d95cf87ba5fe68-5-29-18-158.serveousercontent.com';
+  // Permanent cloud backend on Render
+  const BACKEND_URL = 'https://daily-scoop-backend-u83x.onrender.com';
 
   const THEME = {
     accent: '#00FFFF',
