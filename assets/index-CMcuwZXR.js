@@ -14,12 +14,12 @@ UID:${new Date().getTime()}@dailyscoop.com
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g,``).split(`.`)[0]}Z
 DTSTART:20240101T${t}${r}00
 RRULE:FREQ=DAILY
-SUMMARY:Take Creatine! 🥄
-DESCRIPTION:Don't lose those gains! Time for your daily scoop.
+SUMMARY:Creatine Check-In 🥄
+DESCRIPTION:Did you take your creatine today? Open Daily Scoop to check.
 BEGIN:VALARM
 TRIGGER:-PT0M
 ACTION:DISPLAY
-DESCRIPTION:Take Creatine!
+DESCRIPTION:Did you take your creatine? Open Daily Scoop to check.
 END:VALARM
 END:VEVENT
 END:VCALENDAR`,a=new Blob([i],{type:`text/calendar;charset=utf-8`}),o=URL.createObjectURL(a),s=document.createElement(`a`);s.href=o,s.download=`daily-scoop-alarm.ics`,document.body.appendChild(s),s.click(),document.body.removeChild(s)},style:{backgroundColor:o.surface,color:o.text},children:`Sync Offline Alarm`})]})]})]})}(0,u.createRoot)(document.getElementById(`root`)).render((0,f.jsx)(l.StrictMode,{children:(0,f.jsx)(p,{})}));
