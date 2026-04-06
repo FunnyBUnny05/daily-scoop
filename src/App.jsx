@@ -85,12 +85,12 @@ UID:${new Date().getTime()}@dailyscoop.com
 DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
 DTSTART:20240101T${hours}${minutes}00
 RRULE:FREQ=DAILY
-SUMMARY:Take Creatine! 🥄
-DESCRIPTION:Don't lose those gains! Time for your daily scoop.
+SUMMARY:Creatine Check-In 🥄
+DESCRIPTION:Did you take your creatine today? Open Daily Scoop to check.
 BEGIN:VALARM
 TRIGGER:-PT0M
 ACTION:DISPLAY
-DESCRIPTION:Take Creatine!
+DESCRIPTION:Did you take your creatine? Open Daily Scoop to check.
 END:VALARM
 END:VEVENT
 END:VCALENDAR`;
