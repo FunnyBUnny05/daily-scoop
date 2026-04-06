@@ -8,7 +8,7 @@ function App() {
   const [pushEnabled, setPushEnabled] = useState(false);
 
   // Replace with your actual backend URL once deployed (e.g., Render, Vercel, Heroku)
-  const BACKEND_URL = 'https://wise-hoops-cry.loca.lt';
+  const BACKEND_URL = 'https://c1d95cf87ba5fe68-5-29-18-158.serveousercontent.com';
 
   const THEME = {
     accent: '#00FFFF',
@@ -85,9 +85,7 @@ function App() {
         const registration = await navigator.serviceWorker.ready;
         
         // Fetch the public key from our backend
-        const response = await fetch(`${BACKEND_URL}/vapidPublicKey`, {
-          headers: { 'Bypass-Tunnel-Reminder': 'true' }
-        });
+        const response = await fetch(`${BACKEND_URL}/vapidPublicKey`);
         const vapidPublicKey = await response.text();
         const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
@@ -101,8 +99,7 @@ function App() {
           method: 'POST',
           body: JSON.stringify(subscription),
           headers: {
-            'content-type': 'application/json',
-            'Bypass-Tunnel-Reminder': 'true'
+            'content-type': 'application/json'
           }
         });
 
@@ -148,10 +145,7 @@ function App() {
     localStorage.setItem('creatine_history', JSON.stringify(newHistory));
 
     // Tell the backend we took it so it cancels the 5 PM push
-    fetch(`${BACKEND_URL}/mark-taken`, { 
-      method: 'POST',
-      headers: { 'Bypass-Tunnel-Reminder': 'true' }
-    }).catch(e => console.error(e));
+    fetch(`${BACKEND_URL}/mark-taken`, { method: 'POST' }).catch(e => console.error(e));
   };
   
   const generateICS = () => {
