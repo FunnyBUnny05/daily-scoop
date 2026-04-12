@@ -69,6 +69,16 @@ function App() {
         const subscription = await registration.pushManager.getSubscription();
         if (subscription) {
           setPushEnabled(true);
+          // Silently sync the subscription to our in-memory backend on load
+          try {
+            await fetch(`${BACKEND_URL}/subscribe`, {
+              method: 'POST',
+              body: JSON.stringify(subscription),
+              headers: { 'content-type': 'application/json' }
+            });
+          } catch (e) {
+            console.log("Silent sync failed", e);
+          }
         }
       } catch (error) {
         console.error('Service Worker Registration Failed:', error);
