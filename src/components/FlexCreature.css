@@ -1,0 +1,65 @@
+.creature-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* Start hidden, slightly scaled down, and translated down behind the button */
+  transform: translateY(60px) scale(0.5);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+  margin-bottom: -40px; /* pull it down to overlap button top */
+}
+
+/* Slide up and fade in */
+.creature-container.active {
+  transform: translateY(0) scale(1.4);
+  opacity: 1;
+}
+
+/* Arms animation defaults */
+.left-arm, .right-arm {
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* When the flexing prop is true */
+.creature-container.flexing .left-arm {
+  transform: rotate(-140deg);
+}
+
+.creature-container.flexing .right-arm {
+  transform: rotate(140deg);
+}
+
+/* Bicep muscle boxes */
+.bicep {
+  transition: opacity 0.2s 0.2s, transform 0.3s 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: scale(0);
+  opacity: 0;
+  transform-origin: center;
+}
+
+.creature-container.flexing .bicep {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Power spark lines hidden by default */
+.power-lines {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.creature-container.flexing .power-lines {
+  opacity: 1;
+  animation: pulse-power 0.5s infinite alternate;
+}
+
+@keyframes pulse-power {
+  from { opacity: 0.3; transform: scale(0.95); transform-origin: center;}
+  to { opacity: 1; transform: scale(1.05); transform-origin: center;}
+}
+
+/* Add a glowing drop shadow when flexing */
+.creature-container.flexing svg {
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+}

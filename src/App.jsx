@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import FlexCreature from './components/FlexCreature';
 
 function App() {
   const [history, setHistory] = useState({});
@@ -252,19 +253,22 @@ END:VCALENDAR`;
       </div>
 
       <main className="mainContent">
+        <div className="creatureSpawnArea">
+           <FlexCreature isActive={isTakenToday} />
+        </div>
         {isTakenToday ? (
           <div className="statusBox" style={{ borderColor: THEME.accent }}>
             <h2 className="statusTitle" style={{ color: THEME.accent }}>Completed</h2>
             <p className="statusTime" style={{ color: THEME.text }}>Today at {todayData.time}</p>
           </div>
         ) : (
-          <button 
-            className="mainButton" 
-            style={{ backgroundColor: THEME.accent }} 
-            onClick={markTaken}
-          >
-            MARK AS TAKEN
-          </button>
+            <button 
+              className="mainButton" 
+              style={{ backgroundColor: THEME.accent }} 
+              onClick={markTaken}
+            >
+              MARK AS TAKEN
+            </button>
         )}
       </main>
 
